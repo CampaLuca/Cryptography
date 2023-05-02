@@ -36,7 +36,27 @@ def get_gcd_primorial_prime(p, gcd_v, gcd_upper_bound, min_width=None, max_width
                     if goodness:
                         q += 1
                         return q
-        
+    else:
+        for i in range(start_index,10000):
+            q *= P[i]
+
+            if min_width != None and (q+1).nbits() < min_width:
+                    continue
+
+            if max_width != None and (q+1).nbits() > max_width:
+                    break
+
+            gcd_compare = gcd(q, p-1)
+            if ((gcd_v != None and gcd_compare == gcd_v) or (gcd_upper_bound != None and gcd_compare < gcd_upper_bound)) and is_prime(q+1): # is_prime is bottleneck
+                goodness = True
+                if min_width != None and (q+1).nbits() < min_width:
+                    goodness = False
+                if max_width != None and (q+1).nbits() > max_width:
+                    goodness = False
+                
+                if goodness:
+                    q += 1
+                    return q
              
                 
 
@@ -98,6 +118,7 @@ def main(argv):
     max_width = None
     n = 1
     gcd = None
+    gcd_upper_bound=None
 
     for opt, arg in opts:
         if opt == '-h':
