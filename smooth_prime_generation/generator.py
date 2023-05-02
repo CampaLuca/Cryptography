@@ -6,22 +6,21 @@ import random
 indexes = [0,1,2,3,4,5,11,75,171,172,384,457,616,643,1391, 1613,2122,2647,2673,4413,13494,31260,33237]
 P = Primes() # list of primes
 
-def get_gcd_primorial_prime(p, gcd_v, min_width=None, max_width=None):
-    for j in range(500):
-        q = 2
-        for i in range(j,10000):
-            q *= P[i]
+def get_gcd_primorial_prime(p, gcd_v, min_width=None, max_width=None, start_index=None):
+    q = 2
+    for i in range(start_index,10000):
+        q *= P[i]
 
-            if gcd(q,p-1) == gcd_v and is_prime(q+1):
-                goodness = True
-                if min_width and q.nbits() < min_width:
-                    goodness = False
-                if max_width and q.nbits() > max_width:
-                    goodness = False
-                
-                if goodness:
-                    q += 1
-                    return q
+        if gcd(q,p-1) == gcd_v and is_prime(q+1):
+            goodness = True
+            if min_width != None and q.nbits() < min_width:
+                goodness = False
+            if max_width != None and q.nbits() > max_width:
+                goodness = False
+            
+            if goodness:
+                q += 1
+                return q
                 
                 
 
@@ -40,7 +39,7 @@ def get_known_smooth_prime(min_width=None, max_width=None):
             goodness = False
         
         if goodness:
-            return prime
+            return prime, index
     
     
     return get_gcd_primorial_prime(2, 1, min_width=min_width, max_width=max_width)
@@ -52,8 +51,8 @@ def generate(n, gcd=None, min_width=None, max_width=None):
             print("Wrong parameters: gcd requires n=2")
             return None
         
-        p1 = get_known_smooth_prime(min_width=min_width, max_width=max_width)
-        p2 = get_gcd_primorial_prime(p1, gcd, min_width, max_width)
+        p1, index = get_known_smooth_prime(min_width=min_width, max_width=max_width)
+        p2 = get_gcd_primorial_prime(p1, gcd, min_width, max_width, index)
         return [p1, p1]
     else:
         p = get_known_smooth_prime(min_width=min_width, max_width=max_width)
